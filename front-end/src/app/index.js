@@ -30,7 +30,6 @@ const App = props => {
                 <FormPhoneInput setPhone={setPhone} />
                 <FormStateSelecter setState={setState} setCities={setCities} />
                 <FormCitySelecter cities={cities} setCity={setCity} />
-                <button onClick={() => console.log(name, phone, state, city)}>test</button>
             </RegisterForm>
         </div>
     );
