@@ -15,6 +15,7 @@ const FormCitySelecter = props => {
                 <RedAsterisk>*</RedAsterisk>
             </RowSection>
             <CustomSelecter onChange={e => props.setCity(e.target.value)}>
+                <option disabled selected value>Selecione uma cidade</option>
                 {props.cities && props.cities.map((element, key) => {
                     return <option value={element.nome} key={element.id}>{element.nome}</option>
                 })}

@@ -10,7 +10,7 @@ const StateSelecter = props => {
         axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${value}/municipios`)
             .then(resp => props.setCities(resp.data))
             .catch(error => console.log(error));
-    }
+    };
 
     return (
         <CustomSelecter onChange={event => setCitiesByState(event.target.value)}>
