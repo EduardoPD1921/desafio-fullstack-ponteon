@@ -8,7 +8,7 @@ export const SectionTitle = styled.h4`
 
 `;
 
-export const StateSelect = styled.select`
+export const CustomSelecter = styled.select`
     width: 10%;
 `;
 
@@ -21,7 +21,7 @@ export const RegisterInput = styled.input`
     width: ${(props) => props.width};
 `;
 
-export const RegisterForm = styled.form`
+export const RegisterForm = styled.div`
     display: flex;
     flex-direction: column;
     padding-left: 2%;

@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import '../static/css/appStyle.css';
 
-import StateSelecter from '../components/StateSelecter';
+import FormNameInput from '../components/Form/FormNameInput';
+import FormPhoneInput from '../components/Form/FormPhoneInput';
+import FormStateSelecter from '../components/Form/FormStateSelecter';
+import FormCitySelecter from '../components/Form/FormCitySelecter';
 
-import { Title, RegisterForm, RowSection, SectionTitle, RedAsterisk, RegisterInput } from '../static/StyledComponents';
+import { 
+    Title, 
+    RegisterForm
+} from '../static/StyledComponents';
 
 const App = props => {
-    const [state, setState] = useState();
     const [cities, setCities] = useState();
+
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [state, setState] = useState('');
+    const [city, setCity] = useState('');
 
     return (
         <div>
@@ -16,37 +26,12 @@ const App = props => {
                 Cadastro de Empresários
             </Title>
             <RegisterForm>
-                <RowSection>
-                    <SectionTitle>Nome</SectionTitle>
-                    <RedAsterisk>*</RedAsterisk>
-                </RowSection>
-                <RegisterInput width="20%" />
-                <RowSection>
-                    <SectionTitle>Celular</SectionTitle>
-                    <RedAsterisk>*</RedAsterisk>
-                </RowSection>
-                <RegisterInput width="20%" />
-                <RowSection>
-                    <SectionTitle>Estado</SectionTitle>
-                    <RedAsterisk>*</RedAsterisk>
-                </RowSection>
-                <StateSelecter setSelectedState={setState} setCities={setCities} />
-                <RowSection>
-                    <SectionTitle>Cidade</SectionTitle>
-                    <RedAsterisk>*</RedAsterisk>
-                </RowSection>
-                {/* <select>
-                    {test && test.map((element: any, key: any) => {
-                        return <option value={element.id} key={element.id}>{element.nome}</option>
-                    })}
-                </select> */}
-                <select>
-                    {cities && cities.map((element, key) => {
-                        return <option value={element.nome} key={element.id}>{element.nome}</option>
-                    })}
-                </select>
+                <FormNameInput setName={setName} />
+                <FormPhoneInput setPhone={setPhone} />
+                <FormStateSelecter setState={setState} setCities={setCities} />
+                <FormCitySelecter cities={cities} setCity={setCity} />
+                <button onClick={() => console.log(name, phone, state, city)}>test</button>
             </RegisterForm>
-            {/* <button onClick={() => console.log(state)} /> */}
         </div>
     );
 };

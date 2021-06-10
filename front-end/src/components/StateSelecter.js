@@ -1,11 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 
-import { StateSelect } from '../static/StyledComponents';
+import { CustomSelecter } from '../static/StyledComponents';
 
 const StateSelecter = props => {
-    const setSelectedState = (value) => {
-        props.setSelectedState(value);
+    const setCitiesByState = (value) => {
+        props.setState(value);
 
         axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${value}/municipios`)
             .then(resp => props.setCities(resp.data))
@@ -13,7 +13,7 @@ const StateSelecter = props => {
     }
 
     return (
-        <StateSelect onChange={event => setSelectedState(event.target.value)}>
+        <CustomSelecter onChange={event => setCitiesByState(event.target.value)}>
             <option disabled selected value>Selecione um estado</option>
             <option value="AC">AC</option>
             <option value="AL">AL</option>
@@ -42,7 +42,7 @@ const StateSelecter = props => {
             <option value="SP">SP</option>
             <option value="SE">SE</option>
             <option value="TO">TO</option>
-        </StateSelect>
+        </CustomSelecter>
     );
 };
 
