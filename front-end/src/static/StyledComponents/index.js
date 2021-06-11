@@ -5,11 +5,15 @@ export const Title = styled.h2`
 `;
 
 export const SectionTitle = styled.h4`
-
 `;
 
 export const CustomSelecter = styled.select`
     width: 10%;
+`;
+
+export const CustomButton = styled.button`
+    width: 15%;
+    margin-top: 30px;
 `;
 
 export const RedAsterisk = styled.h3`

@@ -14,7 +14,11 @@ const FormInputSection = props => {
                 <SectionTitle>Nome</SectionTitle>
                 <RedAsterisk>*</RedAsterisk>
             </RowSection>
-            <RegisterInput onChange={e => props.setName(e.target.value)} width="20%" />
+            <RegisterInput 
+                placeholder="Digite o nome" 
+                onChange={e => props.setName(e.target.value)} 
+                width="20%" 
+            />
         </React.Fragment>
     );
 };

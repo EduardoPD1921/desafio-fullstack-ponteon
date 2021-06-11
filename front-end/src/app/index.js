@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import VMasker from 'vanilla-masker';
 import axios from 'axios';
 import '../static/css/appStyle.css';
 
@@ -10,7 +11,8 @@ import FormBusinessFatherInput from '../components/Form/FormBusinessFatherInput'
 
 import { 
     Title, 
-    RegisterForm
+    RegisterForm,
+    CustomButton
 } from '../static/StyledComponents';
 
 const App = props => {
@@ -21,14 +23,30 @@ const App = props => {
     const [phone, setPhone] = useState('');
     const [state, setState] = useState('');
     const [city, setCity] = useState('');
-    const [businessFather, setBusinessFather] = useState('');
-    const [businessFatherId, setBusinessFatherId] = useState();
+    const [businessFatherId, setBusinessFatherId] = useState('');
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/empresarios')
+        axios.get('http://127.0.0.1:8000/api/empresario/show-all')
             .then(resp => setBusinessFatherOptions(resp.data))
             .catch(error => console.log(error));
     }, []);
+
+    const onSubmitForm = () => {
+        const unFormattedPhone = VMasker.toPattern(phone, '99999999999');
+
+        const data = {
+            nome: name,
+            celular: unFormattedPhone,
+            estado: state,
+            cidade: city,
+            pai_empresarial_id: businessFatherId
+        };
+
+        axios.post('http://127.0.0.1:8000/api/empresario/register', data)
+            .then(resp => console.log(resp))
+            .then(() => window.location.reload())
+            .catch(error => console.log(error.response));
+    };
 
     return (
         <div>
@@ -37,15 +55,14 @@ const App = props => {
             </Title>
             <RegisterForm>
                 <FormNameInput setName={setName} />
-                <FormPhoneInput setPhone={setPhone} />
+                <FormPhoneInput value={phone} setPhone={setPhone} />
                 <FormStateSelecter setState={setState} setCities={setCities} />
                 <FormCitySelecter cities={cities} setCity={setCity} />
                 <FormBusinessFatherInput 
-                    setBusinessFather={setBusinessFather} 
                     setBusinessFatherId={setBusinessFatherId} 
                     businessFatherOptions={businessFatherOptions} 
                 />
-                {/* <button onClick={() => console.log(businessFatherId, businessFatherId)}>test</button> */}
+                <CustomButton onClick={() => onSubmitForm()}>Cadastrar</CustomButton>
             </RegisterForm>
         </div>
     );
