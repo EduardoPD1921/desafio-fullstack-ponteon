@@ -13,23 +13,27 @@ import {
     Title, 
     RegisterForm,
     CustomButton,
-    ErrorList
+    ErrorList,
+    EmpresariosTable,
+    TableValue,
+    TableTitle
 } from '../static/StyledComponents';
 
 const App = props => {
     const [cities, setCities] = useState();
-    const [businessFatherOptions, setBusinessFatherOptions] = useState();
+    const [empresarios, setEmpresarios] = useState();
     const [errors, setErrors] = useState([]);
 
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [state, setState] = useState('');
     const [city, setCity] = useState('');
+    const [businessFather, setBusinessFather] = useState('');
     const [businessFatherId, setBusinessFatherId] = useState('');
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/empresario/show-all')
-            .then(resp => setBusinessFatherOptions(resp.data))
+            .then(resp => setEmpresarios(resp.data))
             .catch(error => console.log(error));
     }, []);
 
@@ -41,6 +45,7 @@ const App = props => {
             celular: unFormattedPhone,
             estado: state,
             cidade: city,
+            pai_empresarial: businessFather,
             pai_empresarial_id: businessFatherId
         };
 
@@ -93,14 +98,47 @@ const App = props => {
                 <FormPhoneInput value={phone} setPhone={setPhone} />
                 <FormStateSelecter setState={setState} setCities={setCities} />
                 <FormCitySelecter cities={cities} setCity={setCity} />
-                <FormBusinessFatherInput 
+                <FormBusinessFatherInput
+                    setBusinessFather={setBusinessFather} 
                     setBusinessFatherId={setBusinessFatherId} 
-                    businessFatherOptions={businessFatherOptions} 
+                    businessFatherOptions={empresarios} 
                 />
                 <CustomButton onClick={() => onSubmitForm()}>Cadastrar</CustomButton>
                 {/* <button onClick={() => console.log(errors)}>test</button> */}
             </RegisterForm>
             {renderErrors()}
+            <EmpresariosTable>
+                <tr>
+                    <TableTitle>Nome Completo</TableTitle>
+                    <TableTitle>Celular</TableTitle>
+                    <TableTitle>Cidade/UF</TableTitle>
+                    <TableTitle>Cadastrado em</TableTitle>
+                    <TableTitle>Pai Empresarial</TableTitle>
+                    <TableTitle>Rede</TableTitle>
+                    <TableTitle> - </TableTitle>
+                </tr>
+                {empresarios && empresarios.map(element => {
+                    const maskedPhone = VMasker.toPattern(element.celular, '(99) 99999-9999');
+                    const data = new Date(element.created_at);
+
+                    const dataHours = data.getHours();
+                    const dataMinutes = data.getMinutes();
+
+                    const dataDay = data.getDate();
+                    const dataMonth = data.getMonth() + 1;
+                    const dataYear = data.getFullYear();
+
+                    return (
+                        <tr>
+                            <TableValue>{element.nome}</TableValue>
+                            <TableValue>{maskedPhone}</TableValue>
+                            <TableValue>{`${element.cidade} / ${element.estado}`}</TableValue>
+                            <TableValue>{`${dataDay}/${dataMonth}/${dataYear} ${dataHours}:${dataMinutes}`}</TableValue>
+                            <TableValue>{element.pai_empresarial}</TableValue>
+                        </tr>
+                    );
+                })}
+            </EmpresariosTable>
         </div>
     );
 };

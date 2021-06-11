@@ -15,6 +15,7 @@ class EmpresarioController extends Controller
             'celular' => 'required|string|min:11|max:11|unique:empresarios',
             'estado' => 'required|string|min:2|max:2',
             'cidade' => 'required|string',
+            'pai_empresarial' => 'string|nullable',
             'pai_empresarial_id' => 'nullable'
         ]);
 
@@ -45,11 +46,26 @@ class EmpresarioController extends Controller
         }
     }
 
-    public function destroy(Request $request) {
-        $empresario = Empresario::findOrFail($request->id);
+    public function getEmpresarioById(Request $request) {
+        try {
+            $empresario = Empresario::findOrFail($request->id);
 
-        $empresario->destroy($empresario->id);
+            return response($empresario, 200);
+        } catch(Exception $e) {
+            $errorResponse = [
+                'message' => 'Usuário não encontrado',
+                'error-log' => $e->getMessage()
+            ];
 
-        return 'boa';
+            return response($errorResponse, 404);
+        }
     }
+
+    // public function destroy(Request $request) {
+    //     $empresario = Empresario::findOrFail($request->id);
+
+    //     $empresario->destroy($empresario->id);
+
+    //     return 'boa';
+    // }
 }

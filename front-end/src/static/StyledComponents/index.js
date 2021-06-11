@@ -24,6 +24,26 @@ export const RedAsterisk = styled.h3`
 export const ErrorList = styled.ul`
     font-style: italic;
     color: red;
+    margin-left: 15px;
+`;
+
+export const EmpresariosTable = styled.table`
+    width: 50%;
+    border-collapse: collapse;
+    margin-top: 5%;
+    margin-left: 15px;
+`;
+
+export const TableTitle = styled.th`
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+`;
+
+export const TableValue = styled.td`
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
 `;
 
 export const RegisterInput = styled.input`
