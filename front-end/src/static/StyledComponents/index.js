@@ -21,6 +21,11 @@ export const RedAsterisk = styled.h3`
     margin-left: 5px;
 `;
 
+export const ErrorList = styled.ul`
+    font-style: italic;
+    color: red;
+`;
+
 export const RegisterInput = styled.input`
     width: ${(props) => props.width};
 `;

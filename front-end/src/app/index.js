@@ -12,12 +12,14 @@ import FormBusinessFatherInput from '../components/Form/FormBusinessFatherInput'
 import { 
     Title, 
     RegisterForm,
-    CustomButton
+    CustomButton,
+    ErrorList
 } from '../static/StyledComponents';
 
 const App = props => {
     const [cities, setCities] = useState();
     const [businessFatherOptions, setBusinessFatherOptions] = useState();
+    const [errors, setErrors] = useState([]);
 
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
@@ -45,7 +47,40 @@ const App = props => {
         axios.post('http://127.0.0.1:8000/api/empresario/register', data)
             .then(resp => console.log(resp))
             .then(() => window.location.reload())
-            .catch(error => console.log(error.response));
+            .catch(error => onSubmitErrorForm(error.response.data));
+    };
+
+    const onSubmitErrorForm = error => {
+        setErrors([]);
+
+        const errorList = [
+            error.celular,
+            error.cidade,
+            error.estado,
+            error.nome
+        ];
+
+        const errorsListed = [];
+
+        errorList.map(element => {
+            if (element !== undefined) {
+                return errorsListed.push(element[0]);
+            }
+
+            return false;
+        });
+
+        setErrors(errorsListed);
+    };
+
+    const renderErrors = () => {
+        return (
+            <ErrorList>
+                {errors.map(element => {
+                    return <li>{element}</li>
+                })}
+            </ErrorList>
+        );
     };
 
     return (
@@ -63,7 +98,9 @@ const App = props => {
                     businessFatherOptions={businessFatherOptions} 
                 />
                 <CustomButton onClick={() => onSubmitForm()}>Cadastrar</CustomButton>
+                {/* <button onClick={() => console.log(errors)}>test</button> */}
             </RegisterForm>
+            {renderErrors()}
         </div>
     );
 };

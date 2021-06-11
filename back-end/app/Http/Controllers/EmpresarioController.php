@@ -45,11 +45,11 @@ class EmpresarioController extends Controller
         }
     }
 
-    // public function destroy(Request $request) {
-    //     $empresario = Empresario::findOrFail($request->id);
+    public function destroy(Request $request) {
+        $empresario = Empresario::findOrFail($request->id);
 
-    //     $empresario->destroy($empresario->id);
+        $empresario->destroy($empresario->id);
 
-    //     return 'boa';
-    // }
+        return 'boa';
+    }
 }
