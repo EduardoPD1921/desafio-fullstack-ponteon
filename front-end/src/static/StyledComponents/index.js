@@ -9,11 +9,12 @@ export const SectionTitle = styled.h4`
 
 export const CustomSelecter = styled.select`
     width: 10%;
+    margin-bottom: 10px;
 `;
 
 export const CustomButton = styled.button`
-    width: 15%;
-    margin-top: 30px;
+    width: ${(props) => props.width};
+    margin-top: ${(props) => props.marginTop || '0px'};
 `;
 
 export const RedAsterisk = styled.h3`
@@ -28,7 +29,7 @@ export const ErrorList = styled.ul`
 `;
 
 export const EmpresariosTable = styled.table`
-    width: 50%;
+    width: 70%;
     border-collapse: collapse;
     margin-top: 5%;
     margin-left: 15px;
@@ -36,18 +37,19 @@ export const EmpresariosTable = styled.table`
 
 export const TableTitle = styled.th`
     border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
+    text-align: center;
 `;
 
 export const TableValue = styled.td`
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
+    text-align: center;
 `;
 
 export const RegisterInput = styled.input`
     width: ${(props) => props.width};
+    margin-bottom: 10px;
 `;
 
 export const RegisterForm = styled.div`

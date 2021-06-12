@@ -8,7 +8,8 @@ use App\Http\Controllers\EmpresarioController;
 Route::group(['prefix' => 'empresario'], function() {
     Route::post('/register', [EmpresarioController::class, 'store']);
     Route::get('/show-all', [EmpresarioController::class, 'show']);
-    Route::get('/get-by-id', [EmpresarioController::class, 'getEmpresarioById']);
+    Route::get('show-family-tree', [EmpresarioController::class, 'showFamilyTree']);
+    Route::delete('/delete', [EmpresarioController::class, 'destroy']);
 });
 
-Route::post('/test', [EmpresarioController::class, 'destroy']);
+Route::post('/test', [EmpresarioController::class, 'test']);

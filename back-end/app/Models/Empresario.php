@@ -20,7 +20,12 @@ class Empresario extends Model
 
     protected $guarded = [];
 
-    public function empresario() {
-        $this->hasOne(Empresario::class, 'pai_empresarial_id');
+    // public function parent() {
+    //     // return $this->hasOne(Empresario::class, 'pai_empresarial_id');
+    //     return $this->hasMany(Empresario::class, 'id');
+    // }
+
+    public function children() {
+        return $this->hasMany(Empresario::class, 'pai_empresarial_id')->with('children');
     }
 }

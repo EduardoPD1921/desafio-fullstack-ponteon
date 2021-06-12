@@ -33,7 +33,7 @@ class EmpresarioController extends Controller
 
     public function show() {
         try {
-            $empresarios = Empresario::all();
+            $empresarios = Empresario::orderBy('created_at', 'desc')->get();
 
             return response($empresarios, 200);
         } catch(Exception $e) {
@@ -46,14 +46,14 @@ class EmpresarioController extends Controller
         }
     }
 
-    public function getEmpresarioById(Request $request) {
+    public function showFamilyTree(Request $request) {
         try {
-            $empresario = Empresario::findOrFail($request->id);
+            $empresario = Empresario::find($request->id)->with('children')->first();
 
             return response($empresario, 200);
         } catch(Exception $e) {
             $errorResponse = [
-                'message' => 'Usuário não encontrado',
+                'message' => 'Empresario não encontrado',
                 'error-log' => $e->getMessage()
             ];
 
@@ -61,11 +61,25 @@ class EmpresarioController extends Controller
         }
     }
 
-    // public function destroy(Request $request) {
-    //     $empresario = Empresario::findOrFail($request->id);
+    public function destroy(Request $request) {
+        try {
+            $empresario = Empresario::findOrFail($request->id);
+            $empresario->destroy($request->id);
 
-    //     $empresario->destroy($empresario->id);
+            return response('empresario-deleted', 200);
+        } catch(Exception $e) {
+            $errorResponse = [
+                'message' => 'Empresario não encontrado',
+                'error-log' => $e->getMessage()
+            ];
 
-    //     return 'boa';
+            return response($errorResponse, 404);
+        }
+    }
+
+    // public function test(Request $request) {
+    //     $empresario = Empresario::find($request->id)->with('children')->first();
+
+    //     return $empresario;
     // }
 }

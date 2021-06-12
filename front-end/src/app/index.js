@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import VMasker from 'vanilla-masker';
 import axios from 'axios';
+import Bootbox from 'bootbox-react';
 import '../static/css/appStyle.css';
 
 import FormNameInput from '../components/Form/FormNameInput';
@@ -20,6 +21,10 @@ import {
 } from '../static/StyledComponents';
 
 const App = props => {
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [registerToDelete, setRegisterToDelete] = useState('');
+    const [familyTree, setFamilyTree] = useState();
+
     const [cities, setCities] = useState();
     const [empresarios, setEmpresarios] = useState();
     const [errors, setErrors] = useState([]);
@@ -88,6 +93,69 @@ const App = props => {
         );
     };
 
+    const onViewNestedList = id => {
+        const data = {
+            id
+        };
+
+        axios.get('http://127.0.0.1:8000/api/empresario/show-family-tree', {
+            params: data 
+        })
+            .then(resp => {
+                setFamilyTree(resp.data);
+                console.log(resp.data);
+            })
+            .catch(error => console.log(error.response));
+    };
+
+    const renderNestedList = () => {
+        if (familyTree !== undefined) {
+            return (
+                <ul>
+                    <li>{familyTree.nome}</li>
+                    <ul>
+                        {familyTree.children ? renderChildren(familyTree.children) : false}
+                    </ul>
+                </ul>
+            );
+        }
+
+        return false;
+    };
+
+    const renderChildren = data => {
+        // console.log(data);
+
+        return (
+            data.map(element => {
+                return <li>{element.nome}</li>
+            })
+        );
+    };
+
+    const test = () => {
+        console.log('cu');
+    }
+
+    const deleteEmpresario = () => {
+        const data = {
+            id: registerToDelete
+        };
+
+        axios.delete('http://127.0.0.1:8000/api/empresario/delete', {
+            params: data
+        })
+            .then(resp => {
+                window.location.reload();
+            })
+            .catch(error => console.log(error.response));
+    };
+
+    const onDelete = registerId => {
+        setShowConfirmation(true);
+        setRegisterToDelete(registerId);
+    };
+
     return (
         <div>
             <Title>
@@ -103,10 +171,18 @@ const App = props => {
                     setBusinessFatherId={setBusinessFatherId} 
                     businessFatherOptions={empresarios} 
                 />
-                <CustomButton onClick={() => onSubmitForm()}>Cadastrar</CustomButton>
-                {/* <button onClick={() => console.log(errors)}>test</button> */}
+                <CustomButton marginTop="30px" width="15%" onClick={() => onSubmitForm()}>Cadastrar</CustomButton>
+                {/* <button onClick={() => setShowConfirmation(true)}>test</button> */}
             </RegisterForm>
             {renderErrors()}
+            <Bootbox
+                type="confirm"
+                message="Tem certeza que deseja excluir esse cadastro?"
+                show={showConfirmation}
+                onSuccess={() => deleteEmpresario()}
+                onCancel={() => setShowConfirmation(false)}
+                onClose={() => setShowConfirmation(false)}
+            />
             <EmpresariosTable>
                 <tr>
                     <TableTitle>Nome Completo</TableTitle>
@@ -134,11 +210,19 @@ const App = props => {
                             <TableValue>{maskedPhone}</TableValue>
                             <TableValue>{`${element.cidade} / ${element.estado}`}</TableValue>
                             <TableValue>{`${dataDay}/${dataMonth}/${dataYear} ${dataHours}:${dataMinutes}`}</TableValue>
-                            <TableValue>{element.pai_empresarial}</TableValue>
+                            <TableValue>{element.pai_empresarial ? element.pai_empresarial : '-'}</TableValue>
+                            <TableValue>
+                                <CustomButton onClick={() => onViewNestedList(element.id)}>Ver rede</CustomButton>
+                            </TableValue>
+                            <TableValue>
+                                <CustomButton onClick={() => onDelete(element.id)} width="100%">Excluir</CustomButton>
+                            </TableValue>
                         </tr>
                     );
                 })}
+
             </EmpresariosTable>
+            {renderNestedList()}
         </div>
     );
 };
