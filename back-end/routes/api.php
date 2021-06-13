@@ -12,4 +12,4 @@ Route::group(['prefix' => 'empresario'], function() {
     Route::delete('/delete', [EmpresarioController::class, 'destroy']);
 });
 
-Route::post('/test', [EmpresarioController::class, 'test']);
+// Route::get('/test', [EmpresarioController::class, 'test']);

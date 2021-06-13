@@ -7,13 +7,11 @@ import {
 } from '../../static/StyledComponents';
 
 const FormBusinessFatherInput = props => {
-    const setBusinessFatherAndId = element => {
-        props.setBusinessFather(element.nome);
+    const setBusinessFatherId = element => {
         props.setBusinessFatherId(element.id);
     };
 
     const setNoneBusinessFather = () => {
-        props.setBusinessFather('');
         props.setBusinessFatherId('');
     };
 
@@ -28,7 +26,7 @@ const FormBusinessFatherInput = props => {
                     return (
                         <option
                             key={element.id}
-                            onClick={() => setBusinessFatherAndId(element)}
+                            onClick={() => setBusinessFatherId(element)}
                         >
                             {element.nome}
                         </option>

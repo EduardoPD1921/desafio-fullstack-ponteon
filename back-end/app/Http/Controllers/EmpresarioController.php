@@ -15,7 +15,6 @@ class EmpresarioController extends Controller
             'celular' => 'required|string|min:11|max:11|unique:empresarios',
             'estado' => 'required|string|min:2|max:2',
             'cidade' => 'required|string',
-            'pai_empresarial' => 'string|nullable',
             'pai_empresarial_id' => 'nullable'
         ]);
 
@@ -33,7 +32,7 @@ class EmpresarioController extends Controller
 
     public function show() {
         try {
-            $empresarios = Empresario::orderBy('created_at', 'desc')->get();
+            $empresarios = Empresario::orderBy('created_at', 'desc')->with('parent')->get();
 
             return response($empresarios, 200);
         } catch(Exception $e) {
@@ -76,10 +75,4 @@ class EmpresarioController extends Controller
             return response($errorResponse, 404);
         }
     }
-
-    // public function test(Request $request) {
-    //     $empresario = Empresario::find($request->id)->with('children')->first();
-
-    //     return $empresario;
-    // }
 }
