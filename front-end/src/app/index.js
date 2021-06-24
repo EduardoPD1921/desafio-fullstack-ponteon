@@ -34,6 +34,9 @@ const App = props => {
     const [city, setCity] = useState('');
     const [businessFatherId, setBusinessFatherId] = useState('');
 
+    const [paiEmpresarialSelected, setPaiEmpresarialSelected] = useState('');
+    const [editEmpresario, setEditEmpresario] = useState('');
+
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/empresario/show-all')
             .then(resp => setEmpresarios(resp.data))
@@ -109,6 +112,112 @@ const App = props => {
         setRegisterToDelete(registerId);
     };
 
+    const onChange = (nome, valor) => {
+        if (nome === 'celular') {
+            return setEditEmpresario({
+                ...editEmpresario,
+                [nome]: phoneFormatter(valor)
+            });
+        }
+
+        return setEditEmpresario({
+            ...editEmpresario,
+            [nome]: valor
+        });
+    }
+
+    const phoneFormatter = (phoneValue) => {
+        const formattedPhoneValue = VMasker.toPattern(phoneValue, '(99) 99999-9999');
+        return formattedPhoneValue;
+    }
+
+    const onCancelEdit = () => {
+        setEditEmpresario('');
+        setPaiEmpresarialSelected('');
+    }
+
+    const onSaveChanges = () => {
+        const unmaskedPhone = VMasker.toPattern(editEmpresario.celular, '99999999999');
+        editEmpresario.celular = unmaskedPhone;
+        editEmpresario.pai_empresarial_id = paiEmpresarialSelected;
+
+        axios.put('http://127.0.0.1:8000/api/empresario/update', editEmpresario)
+            .then(() => window.location.reload())
+            .catch(error => onSubmitErrorForm(error.response.data));
+    }
+
+    const renderEditForm = () => {
+        if (editEmpresario) {
+            return (
+                <EmpresariosTable>
+                    <tr>
+                        <TableTitle>Nome Completo</TableTitle>
+                        <TableTitle>Celular</TableTitle>
+                        <TableTitle>Cidade</TableTitle>
+                        <TableTitle>UF</TableTitle>
+                        <TableTitle>Pai Empresarial</TableTitle>
+                        <TableTitle>x</TableTitle>
+                        <TableTitle>-</TableTitle>
+                    </tr>
+                    <tr>
+                        <TableValue>
+                            <input 
+                                onChange={e => onChange('nome', e.target.value)}
+                                placeholder="Nome"
+                                value={editEmpresario.nome}
+                            />
+                        </TableValue>
+                        <TableValue>
+                            <input
+                                onChange={e => onChange('celular', e.target.value)} 
+                                placeholder="Celular"
+                                value={phoneFormatter(editEmpresario.celular)}
+                            />
+                        </TableValue>
+                        <TableValue>
+                            <input
+                                onChange={e => onChange('cidade', e.target.value)}
+                                placeholder="Cidade"
+                                value={editEmpresario.cidade}
+                            />
+                        </TableValue>
+                        <TableValue>
+                            <input
+                                onChange={e => onChange('estado', e.target.value)} 
+                                placeholder="Estado"
+                                value={editEmpresario.estado} 
+                            />
+                        </TableValue>
+                        <TableValue>
+                            <select>
+                                <option onClick={() => setPaiEmpresarialSelected('')}>Nenhum</option>
+                                {empresarios && empresarios.map(element => {
+                                    if (element.id !== editEmpresario.id) {
+                                        return (
+                                            <option onClick={() => setPaiEmpresarialSelected(element.id)}>
+                                                {element.nome}
+                                            </option>
+                                        )
+                                    }
+
+                                    return '';
+                                })}
+                            </select>
+                        </TableValue>
+                        <TableValue>
+                            <CustomButton onClick={() => onCancelEdit()}>Cancelar</CustomButton>
+                        </TableValue>
+                        <TableValue>
+                            <CustomButton onClick={() => onSaveChanges()}>Salvar</CustomButton>
+                        </TableValue>
+                    </tr>
+                </EmpresariosTable>
+            )
+        }
+
+        return;
+    }
+
     return (
         <div>
             <Title>
@@ -143,6 +252,7 @@ const App = props => {
                     <TableTitle>Pai Empresarial</TableTitle>
                     <TableTitle>Rede</TableTitle>
                     <TableTitle> - </TableTitle>
+                    <TableTitle>Edição</TableTitle>
                 </tr>
                 {empresarios && empresarios.map(element => {
                     const maskedPhone = VMasker.toPattern(element.celular, '(99) 99999-9999');
@@ -168,11 +278,14 @@ const App = props => {
                             <TableValue>
                                 <CustomButton onClick={() => onDelete(element.id)} width="100%">Excluir</CustomButton>
                             </TableValue>
+                            <TableValue>
+                                <CustomButton width="100%" onClick={() => setEditEmpresario(element)}>Editar</CustomButton>
+                            </TableValue>
                         </tr>
                     );
                 })}
-
             </EmpresariosTable>
+            {renderEditForm()}
         </div>
     );
 };
