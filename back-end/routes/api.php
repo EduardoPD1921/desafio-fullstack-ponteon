@@ -9,7 +9,7 @@ Route::group(['prefix' => 'empresario'], function() {
     Route::post('/register', [EmpresarioController::class, 'store']);
     Route::get('/show-all', [EmpresarioController::class, 'show']);
     Route::put('/update', [EmpresarioController::class, 'update']);
-    Route::get('show-family-tree', [EmpresarioController::class, 'showFamilyTree']);
+    Route::get('/show-family-tree', [EmpresarioController::class, 'showFamilyTree']);
     Route::delete('/delete', [EmpresarioController::class, 'destroy']);
 });
 

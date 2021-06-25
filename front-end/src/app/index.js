@@ -37,6 +37,8 @@ const App = props => {
     const [paiEmpresarialSelected, setPaiEmpresarialSelected] = useState('');
     const [editEmpresario, setEditEmpresario] = useState('');
 
+    const [familyTree, setFamilyTree] = useState();
+
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/empresario/show-all')
             .then(resp => setEmpresarios(resp.data))
@@ -144,6 +146,42 @@ const App = props => {
         axios.put('http://127.0.0.1:8000/api/empresario/update', editEmpresario)
             .then(() => window.location.reload())
             .catch(error => onSubmitErrorForm(error.response.data));
+    }
+
+    const test = (empresarioId) => {
+        axios.get('http://127.0.0.1:8000/api/empresario/show-family-tree', {
+            params: {
+                id: empresarioId
+            }
+        })
+            .then(resp => setFamilyTree(resp.data))
+            .catch(error => console.log(error.response));
+    }
+
+    const renderTree = () => {
+        if (familyTree) {
+            return (
+                <ul>
+                    <li>{familyTree.nome}</li>
+                    {renderChildrens(familyTree.children)}
+                </ul>
+            )
+        }
+    }
+
+    const renderChildrens = (children) => {
+        return (
+            <ul>
+                {children.map(element => {
+                    return (
+                        <React.Fragment>
+                            <li>{element.nome}</li>
+                            {element.children && renderChildrens(element.children)}
+                        </React.Fragment>
+                    )
+                })}
+            </ul>
+        )
     }
 
     const renderEditForm = () => {
@@ -273,7 +311,7 @@ const App = props => {
                             <TableValue>{`${dataDay}/${dataMonth}/${dataYear} ${dataHours}:${dataMinutes}`}</TableValue>
                             <TableValue>{element.parent ? element.parent.nome : '-'}</TableValue>
                             <TableValue>
-                                <CustomButton>Ver rede</CustomButton>
+                                <CustomButton onClick={() => test(element.id)}>Ver rede</CustomButton>
                             </TableValue>
                             <TableValue>
                                 <CustomButton onClick={() => onDelete(element.id)} width="100%">Excluir</CustomButton>
@@ -285,6 +323,7 @@ const App = props => {
                     );
                 })}
             </EmpresariosTable>
+            {renderTree()}
             {renderEditForm()}
         </div>
     );

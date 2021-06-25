@@ -85,9 +85,9 @@ class EmpresarioController extends Controller
 
     public function showFamilyTree(Request $request) {
         try {
-            $empresario = Empresario::find($request->id)->with('children')->first();
+            $empresario = Empresario::where('id', $request->id)->with('children')->first();
 
-            return response($empresario, 200);
+            return $empresario;
         } catch(Exception $e) {
             $errorResponse = [
                 'message' => 'Empresario não encontrado',
